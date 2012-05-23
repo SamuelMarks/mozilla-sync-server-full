@@ -8,3 +8,7 @@ swp$
 html
 doc/build
 \.coverage
+\.channel
+man
+nosetests.xml
+test
