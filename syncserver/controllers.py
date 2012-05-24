@@ -44,6 +44,7 @@ import os
 from webob.response import Response
 from mako.lookup import TemplateLookup
 
+from services.user import User, ServicesUser
 from services.util import (valid_password, text_response, html_response,
                            extract_username)
 
@@ -59,6 +60,16 @@ class MainController(object):
     def __init__(self, app):
         self.app = app
         self.auth = app.auth.backend
+        # Fail noisily if not used with a new-style auth backend.
+        try:
+            is_newstyle_auth = isinstance(self.auth, ServicesUser)
+        except Exception:
+            is_newstyle_auth = False
+        if not is_newstyle_auth:
+            msg = "This code will only work with new-style auth backends."\
+                  " Please set 'auth.backend' to a class from the"\
+                  " services.user package."
+            raise ValueError(msg)
 
     def delete_account_form(self, request, **kw):
         """Returns a form for deleting the account"""
@@ -73,7 +84,8 @@ class MainController(object):
             return text_response('Missing data')
 
         user_name = extract_username(user_name)
-        user_id = self.auth.authenticate_user(user_name, password)
+        user = User(user_name)
+        user_id = self.auth.authenticate_user(user, password)
         if user_id is None:
             return text_response('Bad credentials')
 
@@ -81,11 +93,7 @@ class MainController(object):
         self.app.get_storage(request).delete_user(user_id)
 
         # user deletion (ldap etc.)
-        user_id = self.auth.get_user_id(user_name)
-        if user_id is not None:
-            res = self.auth.delete_user(user_id, password)
-        else:
-            res = True
+        res = self.auth.delete_user(user, password)
 
         if res:
             return text_response('Account removed.')
