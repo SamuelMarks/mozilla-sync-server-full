@@ -12,3 +12,7 @@ Routes
 SQLAlchemy
 WSGIProxy
 recaptcha-client
+repoze.lru
+repoze.who
+zope.deprecation
+zope.interface
