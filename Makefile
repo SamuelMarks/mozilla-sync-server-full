@@ -40,6 +40,7 @@ all:	build
 
 build:
 	$(VIRTUALENV) --no-site-packages .
+	$(INSTALL) Distribute
 	$(INSTALL) MoPyTools
 	$(INSTALL) Nose
 	$(INSTALL) WebTest
