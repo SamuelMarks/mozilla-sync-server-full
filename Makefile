@@ -39,7 +39,7 @@ INSTALL += $(INSTALLOPTIONS)
 all:	build
 
 build:
-	$(VIRTUALENV) --use-distribute --no-site-packages .
+	$(VIRTUALENV) --distribute --no-site-packages .
 	$(INSTALL) Distribute
 	$(INSTALL) MoPyTools
 	$(INSTALL) Nose
