@@ -45,9 +45,11 @@ build:
 	$(INSTALL) Nose
 	$(INSTALL) WebTest
 	$(BUILDAPP) -c $(CHANNEL) $(PYPIOPTIONS) $(DEPS)
+	for TMPL in `find . -name '*.mako'`; do $(PYTHON) -c "from mako.template import Template; Template(filename='$$TMPL', module_directory='.')"; done;
 
 update:
 	$(BUILDAPP) -c $(CHANNEL) $(PYPIOPTIONS) $(DEPS)
+	for TMPL in `find . -name '*.mako'`; do $(PYTHON) -c "from mako.template import Template; Template(filename='$$TMPL', module_directory='.')"; done;
 
 test:
 	$(NOSE) $(TESTS)
